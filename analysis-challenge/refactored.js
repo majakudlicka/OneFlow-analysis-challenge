@@ -16,7 +16,7 @@ exports.inviteUser = function(req, res) {
     .send(invitationBody)
     
     //Using promise to catch errors
-    .then((err, invitationResponse) => {
+    .then((invitationResponse) => {
       
       //Checks if new record has been created and calls updateUser function
       if (invitationResponse.status === 201) {
@@ -48,18 +48,17 @@ exports.inviteUser = function(req, res) {
         });
         return;
         
-      } else if (err) {
-        //More error handling
-        res.status(400).json({
-          error: true,
-          message: 'Something went wrong',
-        });
-        return;
-      }
-
       res.json(invitationResponse);
     });
-    .catch((err) => return new Error(error.message))
+    
+    //Error handling
+    .catch((err) => {
+      res.status(400).json({
+        error: true,
+        message: 'Something went wrong',
+      });
+      return;
+    })
 };
 
 updateUser(email, authId, callback) => {
